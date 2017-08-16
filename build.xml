@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="iris" default="deploy" basedir=".">
+    <property name="iris.root" value="${phing.dir}" />
+    <property name="project.root" value="${phing.dir}/.." />
+
+    <property name="project.environment" value="dev" />
+
+    <!-- Adding global properties of API -->
+    <property file="${iris.root}/app/config/phing/global.properties" />
+    <if>
+        <not><available file="${iris.root}/app/config/phing/${project.environment}.properties" /></not>
+        <then>
+            <fail message="environment specific file not found: ${project.environment}"/>
+        </then>
+    </if>
+    <property file="${iris.root}/app/config/phing/${project.environment}.properties" override="true" />
+    <!-- Custom build targets -->
+    <target name="generate-config"  description="generate configuration file based on .properties">
+        <copy file="${iris.root}/app/config/config.yml-dist" tofile="${iris.root}/app/config/config.yml" overwrite="true">
+            <filterchain>
+                <expandproperties/>
+            </filterchain>
+        </copy>
+    </target>
+
+    <target name="create-cache-dirs">
+        <mkdir dir="${cache.dir}" />
+        <chmod file="${cache.dir}" mode="0777" />
+        <mkdir dir="${cache.dir.twig}" />
+        <chmod file="${cache.dir.twig}" mode="0777" />
+    </target>
+
+    <target name="deploy" depends="generate-config, create-cache-dirs" />
+    <target name="aws-jenkins" depends="" />
+    <target name="aws-server"  depends="generate-config, create-cache-dirs" />
+</project>

@@ -1,0 +1,215 @@
+{% extends "main.twig" %}
+{% block head %}
+    {{ parent() }}
+    <head>
+        <!-- Datatables -->
+        <link href="/assets/lib/gentella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/production/css/datepicker/daterangepicker.css" rel="stylesheet" />
+        <!-- Ion.RangeSlider -->
+        <link href="/assets/lib/gentella/vendors/normalize-css/normalize.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+
+    </head>
+{% endblock%}
+{% block content %}
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Cleaner <small>Removes useless touchpoints</small></h3>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="well">
+                        <form class="form-horizontal">
+                            <div class="row">
+                                <div class="row" style="margin-top: 10px;">
+                                    <div class="form-group">
+                                        <label class="col-md-1 col-sm-1 col-xs-4 control-label">
+                                            Minimum
+                                        </label>
+                                        <div class="col-md-2 col-sm-2 col-xs-3 ">
+{#                                            <input name="minimum" class="knob" data-width="100" data-height="120" data-min="75" data-max="300" data-displayPrevious=true data-fgColor="#26B99A" value="100">#}
+                                            <input name="minimum" class="knob" data-width="100" data-height="120" data-angleOffset=-125 data-angleArc=250 data-min="75" data-max="300" data-fgColor="#34495E" data-rotation="anticlockwise" value="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 10px;">
+                                    <label class="col-md-1 col-sm-1 col-xs-4 control-label">
+                                        Nombre de touchpoint
+                                    </label>
+                                    <div class="col-md-4 col-sm-4 col-xs-8 col-md-offset-1">
+                                        <div class="row grid_slider">
+                                            <input type="text" id="range_31" value="" name="range" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 50px;">
+                                    <div class="col-md-2 col-sm-2 col-xs-4 col-md-offset-3">
+                                        <button type="submit" class="btn btn-success">Validate</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if times is defined %}
+            <table id="resultTable" class="display nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        {% for key in columns %}
+                            <th>{{ key }}</th>
+                            {% endfor %}
+                    </tr>
+                </thead>
+                <tbody id="tableResultContainer">
+                    {% for keyBis, line in times %}
+                        <tr>
+                            {% for key in columns %}
+                                <td>{{ line[key] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block javascript %}
+    {{ parent() }}
+    <!-- Datatables -->
+    <script src="/assets/lib/gentella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="/assets/lib/gentella/production/js/moment/moment.min.js"></script>
+    <script src="/assets/lib/gentella/production/js/datepicker/daterangepicker2.js"></script>
+    <!-- jQuery Knob -->
+    <script src="/assets/lib/gentella/vendors/jquery-knob/dist/jquery.knob.min.js"></script>
+    <!-- Ion.RangeSlider -->
+    <script src="/assets/lib/gentella/vendors/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dateRange').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD'
+                }
+            },
+                    function (start, end, label) {
+                    });
+        });
+    </script>
+
+    <script>
+        $("#resultTable").DataTable({
+            order: [],
+            fixedHeader: {
+                header: true,
+                footer: true
+            },
+            keys: true,
+            lengthMenu: [[-1, 10, 30, 60], ["All", 10, 30, 60]],
+            dom: "Bfrtip",
+            buttons: [
+                "copy", "csv", "excel", "pdf", "print"
+            ],
+            order: [[2, "desc"]]
+        });
+    </script>
+
+    <!-- jQuery Knob -->
+    <script>
+        $(function ($) {
+
+            $(".knob").knob({
+                change: function (value) {
+                    //console.log("change : " + value);
+                },
+                release: function (value) {
+                    //console.log(this.$.attr('value'));
+                    console.log("release : " + value);
+                },
+                cancel: function () {
+                    console.log("cancel : ", this);
+                },
+            });
+
+            // Example of infinite knob, iPod click wheel
+            var v, up = 0,
+                    down = 0,
+                    i = 0,
+                    $idir = $("div.idir"),
+                    $ival = $("div.ival"),
+                    incr = function () {
+                        i++;
+                        $idir.show().html("+").fadeOut();
+                        $ival.html(i);
+                    },
+                    decr = function () {
+                        i--;
+                        $idir.show().html("-").fadeOut();
+                        $ival.html(i);
+                    };
+            $("input.infinite").knob({
+                min: 0,
+                max: 20,
+                stopper: false,
+                change: function () {
+                    if (v > this.cv) {
+                        if (up) {
+                            decr();
+                            up = 0;
+                        } else {
+                            up = 1;
+                            down = 0;
+                        }
+                    } else {
+                        if (v < this.cv) {
+                            if (down) {
+                                incr();
+                                down = 0;
+                            } else {
+                                down = 1;
+                                up = 0;
+                            }
+                        }
+                    }
+                    v = this.cv;
+                }
+            });
+        });
+    </script>
+    <!-- /jQuery Knob -->
+
+    <!-- Ion.RangeSlider -->
+    <script>
+        $(document).ready(function () {
+            $("#range_31").ionRangeSlider({
+                type: "double",
+                min: 0,
+                max: 1000000,
+                step: 20000,
+                from: 0,
+                to: 300000,
+                from_fixed: true
+            });
+        });
+    </script>
+    <!-- /Ion.RangeSlider -->
+{% endblock %}

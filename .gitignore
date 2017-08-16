@@ -1,0 +1,17 @@
+#generated application files
+app/config/config.yml
+
+# Composer
+vendor/
+composer.lock
+
+Thumbs.db
+# IDE
+.idea/
+/nbproject/private/
+
+# QA & prod
+/var
+
+# Js lib
+assets/lib/*

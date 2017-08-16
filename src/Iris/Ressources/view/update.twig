@@ -1,0 +1,222 @@
+{% extends "main.twig" %}
+{% block head %}
+    {{ parent() }}
+    <head>
+        <!-- Datatables -->
+        <link href="/assets/lib/gentella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/production/css/datepicker/daterangepicker.css" rel="stylesheet" />
+
+    </head>
+{% endblock%}
+{% block content %}
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Update <small>Materialized tables </small></h3>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="well">
+                        <form class="form-horizontal">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-3 col-sm-3 col-xs-3">
+                                        <div class="input-group input-append date dp">
+                                            <input type="text" name="dateRange" id="dateRange" class="form-control" value="{% if filters.date is defined %}{{ filters.date.start }} - {{ filters.date.end }}{% endif %}" />
+                                            <span class="add-on input-group-addon">
+                                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                            <span id="yesterday" class="allDate btn btn-success">Yesterday</span>
+                                            <span id="lastWeek" class="allDate btn btn-success">Last Week</span>
+                                            <span id="lastMonth" class="allDate btn btn-success">Last Month</span>
+                                            <span id="allDate" class="btn btn-success">All date</span>
+                                    </div>
+                                    <label class="col-md-1 col-sm-1 col-xs-4 control-label">Conversions
+                                        <br>
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-4">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="members" value="1" type="checkbox" class="flat" {% if filters.members is defined %}checked="checked"{% endif %}> Nouveaux Membres
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="bids" value="1" type="checkbox" class="flat" {% if filters.bids is defined %}checked="checked"{% endif %}> Bids
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="connexions" value="1" type="checkbox" class="flat" {% if filters.connexions is defined %}checked="checked"{% endif %}> Connexions
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="wins" value="1" type="checkbox" class="flat" {% if filters.wins is defined %}checked="checked"{% endif %}> Wins
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="payments" value="1" type="checkbox" class="flat" {% if filters.payments is defined %}checked="checked"{% endif %}> Paiements
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="va" value="1" type="checkbox" class="flat" {% if filters.va is defined %}checked="checked"{% endif %}> VA
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="ca" value="1" type="checkbox" class="flat" {% if filters.ca is defined %}checked="checked"{% endif %}> CA
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <label class="col-md-1 col-sm-1 col-xs-4 control-label">Models
+                                        <br>
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-4">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="linear" value="1" type="checkbox" class="flat" {% if filters.model.linear is defined %}checked="checked"{% endif %}> Linear
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="firstclick" value="1" type="checkbox" class="flat" {% if filters.model.firstclick is defined %}checked="checked"{% endif %}> First click
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="lastclick" value="1" type="checkbox" class="flat" {% if filters.model.lastclick is defined %}checked="checked"{% endif %}> Last click
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="ascending" value="1" type="checkbox" class="flat" {% if filters.model.ascending is defined %}checked="checked"{% endif %}> Acscending
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="descending" value="1" type="checkbox" class="flat" {% if filters.model.descending is defined %}checked="checked"{% endif %}> Descending
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="parabolic" value="1" type="checkbox" class="flat" {% if filters.model.parabolic is defined %}checked="checked"{% endif %}> Parabolic
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-4">
+                                        <button type="submit" class="btn btn-success">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if times is defined %}
+            <table id="resultTable" class="display nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        {% for key in columns %}
+                            <th>{{ key }}</th>
+                            {% endfor %}
+                    </tr>
+                </thead>
+                <tbody id="tableResultContainer">
+                    {% for keyBis, line in times %}
+                        <tr>
+                            {% for key in columns %}
+                                <td>{{ line[key] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block javascript %}
+    {{ parent() }}
+    <!-- Datatables -->
+    <script src="/assets/lib/gentella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="/assets/lib/gentella/production/js/moment/moment.min.js"></script>
+    <script src="/assets/lib/gentella/production/js/datepicker/daterangepicker2.js"></script>
+    <!-- iCheck -->
+    <script src="/assets/lib/gentella/vendors/iCheck/icheck.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dateRange').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD'
+                }
+            },
+                    function (start, end, label) {
+                    });
+        });
+
+        $('#allDate').on('click', function () {
+            var d = new Date();
+            $('#dateRange').val('2016-06-01 - ' + d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate());
+        });
+
+        $('#yesterday').on('click', function () {
+            var d = new Date();
+            d.setDate(d.getDate() - 1);
+            $('#dateRange').val(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' - ' + d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate());
+        });
+
+        $('#lastWeek').on('click', function () {
+            var d = new Date();
+            d.setDate(d.getDate() - 7);
+            var d2 = new Date();
+            d2.setDate(d2.getDate() - 1);
+            $('#dateRange').val(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' - ' + d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate());
+        });
+
+        $('#lastMonth').on('click', function () {
+            var d = new Date();
+            d.setDate(d.getDate() - 31);
+            var d2 = new Date();
+            d2.setMonth(d2.getMonth());
+            $('#dateRange').val(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' - ' + d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate());
+        });
+    </script>
+
+    <script>
+        $("#resultTable").DataTable({
+            order: [],
+            fixedHeader: {
+                header: true,
+                footer: true
+            },
+            keys: true,
+            lengthMenu: [[-1, 10, 30, 60], ["All", 10, 30, 60]],
+            dom: "Bfrtip",
+            buttons: [
+                "copy", "csv", "excel", "pdf", "print"
+            ],
+            order: [[2, "desc"]]
+        });
+    </script>
+{% endblock %}

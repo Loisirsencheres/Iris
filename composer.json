@@ -1,0 +1,26 @@
+{
+    "name": "LoisirsEncheres/Iris",
+    "description": "Loisirs Encheres Iris Tracking Analytic",
+    "autoload": {
+        "psr-0": {
+            "Iris": "src/"
+        }
+    },
+    "require": {
+        "silex/silex": "1.3.*",
+        "twig/twig": "1.*",
+        "phing/phing": "2.9.*",
+        "symfony/twig-bridge": "v2.8.*",
+        "igorw/config-service-provider": "v1.2.2",
+        "symfony/yaml": "v2.6.*",
+        "aws/aws-sdk-php": "3.17.3",
+        "predis/service-provider" : "1.0.*",
+        "symfony/console": "2.6.*"
+    },
+    "require-dev": {
+        "symfony/web-profiler-bundle": "v2.8.*",
+        "silex/web-profiler": "v1.*@dev",
+        "filp/whoops": "~1.1",
+        "symfony/var-dumper": "dev-master"
+    }
+}

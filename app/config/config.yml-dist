@@ -1,0 +1,31 @@
+env: ${app.env}
+debug: ${app.debug}
+
+user: ${user}
+password: ${password}
+
+cache.dir: ${cache.dir}
+
+db.host: ${db.host}
+db.user: ${db.user}
+db.password: ${db.password}
+db.name: ${db.name}
+
+# Twig
+twig.config:
+  twig.path:
+    - ${iris.root}/src/Iris/Resources/view/
+  twig.options:
+    debug: ${app.debug}
+    cache: ${cache.dir.twig}
+    auto_reload: ${twig.auto_reload}
+    strict_variables: ${app.debug}
+
+redis.host: ${redis.host}
+redis.password: ${redis.password}
+
+cert: rds-combined-ca-bundle.pem
+
+user_rw: ${user_rw}
+pass_rw: ${pass_rw}
+host_rw: ${host_rw}

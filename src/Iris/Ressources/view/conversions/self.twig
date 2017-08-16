@@ -1,0 +1,241 @@
+{% extends "main.twig" %}
+{% block head %}
+    {{ parent() }}
+    <head>
+        <!-- Datatables -->
+        <link href="/assets/lib/gentella/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/lib/gentella/production/css/datepicker/daterangepicker.css" rel="stylesheet" />
+
+    </head>
+{% endblock%}
+{% block content %}
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Conversions <small>Independent linear </small></h3>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="well">
+                        <form class="form-horizontal" method="GET">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-3 col-sm-3 col-xs-3" id='dateClear'>
+                                        <div id='test' class="input-group input-append date dp">
+                                            <input type="text" name="dateRange" id="dateRange" class="form-control" value="{% if filters.date is defined %}{{ filters.date.start }} - {{ filters.date.end }}{% elseif  filters.AllDate is defined%}AllDate{% else %}{{ "now"|date("Y-m") }}-01 - {{ "now"|date("Y-m-d") }}{% endif %}" />
+                                            <span class="add-on input-group-addon">
+                                                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                        <span id="yesterday" class="allDate btn btn-success">Yesterday</span>
+                                        <span id="lastWeek" class="allDate btn btn-success">Last Week</span>
+                                        <span id="lastMonth" class="allDate btn btn-success">Last Month</span>
+                                        <span id="allDate" class="btn btn-success">All date</span>
+                                    </div>
+                                    <label class="control-label col-md-1 col-sm-1 col-xs-4">Group by</label>
+                                    <div class="col-md-2 col-sm-2 col-xs-3">
+                                        <select class="form-control" name="groupby">
+                                            <option value="campaign_name" {% if filters.groupby == "campaign_name" %}selected{% endif %}>Campaign name</option>
+                                            <option value="campaign_id"{% if filters.groupby == "campaign_id" %}selected{% endif %}>Campaign Id</option>
+                                            <option value="utm_campaign"{% if filters.groupby == "utm_campaign" %}selected{% endif %}>Utm campaign</option>
+                                            <option value="utm_source"{% if filters.groupby == "utm_source" %}selected{% endif %}>Utm source</option>
+                                            <option value="utm_medium"{% if filters.groupby == "utm_medium" %}selected{% endif %}>Utm medium</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-md-1 col-sm-1 col-xs-4 control-label">Models
+                                        <br>
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-4">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="model[]" value="linear" type="checkbox" class="flat" {% if "linear" in filters.models %}checked="checked"{% endif %}> Linear
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="model[]" value="firstclick" type="checkbox" class="flat" {% if "firstclick" in filters.models %}checked="checked"{% endif %}> First click
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="model[]" value="lastclick" type="checkbox" class="flat" {% if "lastclick" in filters.models %}checked="checked"{% endif %}> Last click
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="model[]" value="ascending" type="checkbox" class="flat" {% if "ascending" in filters.models %}checked="checked"{% endif %}> Acscending
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="model[]" value="descending" type="checkbox" class="flat" {% if "descending" in filters.models %}checked="checked"{% endif %}> Descending
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="model[]" value="parabolic" type="checkbox" class="flat" {% if "parabolic" in filters.models %}checked="checked"{% endif %}> Parabolic
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <label class="col-md-1 col-sm-1 col-xs-4 control-label">Conversions
+                                        <br>
+                                    </label>
+                                    <div class="col-md-2 col-sm-2 col-xs-4">
+                                        <div class="checkbox" title="Last Update {% if status.last_t_Registers is defined %}{{status.last_t_Registers}}{% else %}No data{% endif %}">
+                                            <label>
+                                                <input name="conversion[]" value="registers" type="checkbox" class="flat" {% if "registers" in filters.conversions %}checked="checked"{% endif %}> Nouveaux Membres
+                                            </label>
+                                        </div>
+                                        <div class="checkbox" title="Last Update {% if status.last_t_Bids is defined %}{{status.last_t_Bids}}{% else %}No data{% endif %}">
+                                            <label>
+                                                <input name="conversion[]" value="bids" type="checkbox" class="flat" {% if "bids" in filters.conversions %}checked="checked"{% endif %}> Bids
+                                            </label>
+                                        </div>
+                                        <div class="checkbox" title="Last Update {% if status.last_t_Logins is defined %}{{status.last_t_Logins}}{% else %}No data{% endif %}">
+                                            <label>
+                                                <input name="conversion[]" value="logins" type="checkbox" class="flat" {% if "logins" in filters.conversions %}checked="checked"{% endif %}> Connexions
+                                            </label>
+                                        </div>
+                                        <div class="checkbox" title="Last Update {% if status.last_t_Wins is defined %}{{status.last_t_Wins}}{% else %}No data{% endif %}">
+                                            <label>
+                                                <input name="conversion[]" value="wins" type="checkbox" class="flat" {% if "wins" in filters.conversions %}checked="checked"{% endif %}> Wins
+                                            </label>
+                                        </div>
+                                        <div class="checkbox" title="Last Update {% if status.last_t_Payments is defined %}{{status.last_t_Payments}}{% else %}No data{% endif %}">
+                                            <label>
+                                                <input name="conversion[]" value="payments" type="checkbox" class="flat" {% if "payments" in filters.conversions %}checked="checked"{% endif %}> Paiements
+                                            </label>
+                                        </div>
+                                        <div class="checkbox" title="Last Update {% if status.last_t_Wins is defined %}{{status.last_t_Wins}}{% else %}No data{% endif %}">
+                                            <label>
+                                                <input name="conversion[]" value="va" type="checkbox" class="flat" {% if "va" in filters.conversions %}checked="checked"{% endif %}> VA
+                                            </label>
+                                        </div>
+                                        <div class="checkbox" title="Last Update {% if status.last_t_Payments is defined %}{{status.last_t_Payments}}{% else %}No data{% endif %}">
+                                            <label>
+                                                <input name="conversion[]" value="ca" type="checkbox" class="flat" {% if "ca" in filters.conversions %}checked="checked"{% endif %}> CA
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2 col-xs-4">
+                                        <button type="submit" class="btn btn-success">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if results is defined %}
+            <table id="resultTable" class="display nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        {% for key in columns %}
+                            <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody id="tableResultContainer">
+                    {% for keyBis, line in results %}
+                        <tr>
+                            {% for key in columns %}
+                                {% if key in ['calinear','cafirstclick','calastclick','caascending','cadescending','caparabolic'] %}
+                                    {% set val = line[key] / 100 %}
+                                {% else %}
+                                    {% set val = (line[key] is defined) ? line[key] | slice(0,40) : 'noName' %}
+                                {% endif %}
+                                <td title='{{ val }}'>
+                                    {{ val }}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            No results
+        {% endif %}
+    </div>
+{% endblock %}
+{% block javascript %}
+    {{ parent() }}
+    <!-- Datatables -->
+    <script src="/assets/lib/gentella/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <script src="/assets/lib/gentella/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="/assets/lib/gentella/production/js/moment/moment.min.js"></script>
+    <script src="/assets/lib/gentella/production/js/datepicker/daterangepicker2.js"></script>
+    <!-- iCheck -->
+    <script src="/assets/lib/gentella/vendors/iCheck/icheck.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#dateRange').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD'
+                }
+            },
+                    function (start, end, label) {
+                    });
+        });
+
+        $('#allDate').on('click', function () {
+            var d = new Date();
+            $('#dateRange').val('2016-06-01 - ' + d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate());
+        });
+
+        $('#yesterday').on('click', function () {
+            var d = new Date();
+            d.setDate(d.getDate() - 1);
+            $('#dateRange').val(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' - ' + d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate());
+        });
+
+        $('#lastWeek').on('click', function () {
+            var d = new Date();
+            d.setDate(d.getDate() - 7);
+            var d2 = new Date();
+            d2.setDate(d2.getDate() - 1);
+            $('#dateRange').val(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' - ' + d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate());
+        });
+
+        $('#lastMonth').on('click', function () {
+            var d = new Date();
+            d.setDate(d.getDate() - 31);
+            var d2 = new Date();
+            d2.setMonth(d2.getMonth());
+            $('#dateRange').val(d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' - ' + d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate());
+        });
+    </script>
+
+    <script>
+        $("#resultTable").DataTable({
+            order: [],
+            fixedHeader: {
+                header: true,
+                footer: true
+            },
+            keys: true,
+            lengthMenu: [[-1, 10, 30, 60], ["All", 10, 30, 60]],
+            dom: "Bfrtip",
+            buttons: [
+                "copy", "csv", "excel", "pdf", "print"
+            ],
+            order: [[1, "desc"]]
+        });
+    </script>
+{% endblock %}
